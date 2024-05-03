@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trash Classification</title>
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .baskets {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            margin-top: 140px;
+        }
+
+        .basket {
+            width: 100px;
+            padding: 10px;
+            border: 2px solid #ffffff;
+            position: relative;
+        }
+
+        /* Customize lid colors */
+        #metal-basket .lid { background-color: #ff9800; }
+        #glass-basket .lid { background-color: #03a9f4; }
+        #paper-basket .lid { background-color: #4caf50; }
+        /* Different color for plastic cover */
+        #plastic-basket .lid { background-color: #9c27b0; }
+
+        .basket h2 {
+            margin: 0;
+        }
+
+        .basket p {
+            margin: 5px 0;
+        }
+
+        .lid {
+            position: absolute;
+            top: -6px;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background-color: #ffffff;
+            transform-origin: center top;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .lid.open {
+            transform: rotate(45deg);
+        }
+
+        .buttons {
+            margin-top: 20px;
+        }
+
+        #file-input {
+            display: none;
+        }
+
+        #selected-photo {
+            margin-top: 10px;
+            display: block;
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        .warning {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Trash Classification</h1>
+        <div class="baskets">
+            <div class="basket" id="metal-basket">
+                <div class="lid"></div>
+                <h2>Metal</h2>
+                <p id="metal-count">0</p>
+            </div>
+            <div class="basket" id="glass-basket">
+                <div class="lid"></div>
+                <h2>Glass</h2>
+                <p id="glass-count">0</p>
+            </div>
+            <div class="basket" id="paper-basket">
+                <div class="lid"></div>
+                <h2>Paper</h2>
+                <p id="paper-count">0</p>
+            </div>
+            <div class="basket" id="plastic-basket">
+                <div class="lid"></div>
+                <h2>Plastic</h2>
+                <p id="plastic-count">0</p>
+            </div>
+        </div>
+        <div class="buttons">
+            <input type="file" id="file-input" accept="image/*">
+            <button class="btn" id="choose-photo-btn">Choose Photo</button>
+            <button class="btn" id="detect-btn">Detect</button>
+            <span id="selected-photo"></span>
+            <p class="warning" id="warning-message" style="display: none;">Photo already processed!</p>
+        </div>
+    </div>
+
+    <script>
+        var processedPhotos = [];
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('choose-photo-btn').addEventListener('click', function () {
+                var fileInput = document.getElementById('file-input');
+                fileInput.click();
+            });
+
+            document.getElementById('file-input').addEventListener('change', function () {
+                var file = this.files[0];
+                var fileName = document.getElementById('selected-photo');
+                if (file) {
+                    fileName.textContent = 'Selected Photo: ' + file.name;
+                } else {
+                    fileName.textContent = '';
+                }
+            });
+
+            document.getElementById('detect-btn').addEventListener('click', function () {
+                var fileInput = document.getElementById('file-input');
+                var file = fileInput.files[0];
+                if (file) {
+                    var formData = new FormData();
+                    formData.append('image', file);
+                    
+                    if (processedPhotos.includes(file.name)) {
+                        document.getElementById('warning-message').style.display = 'block';
+                        setTimeout(function() {
+                            document.getElementById('warning-message').style.display = 'none';
+                        }, 3000);
+                        return;
+                    }
+
+                    processedPhotos.push(file.name);
+
+                    fetch('/classify', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        var predictedClass = data.predicted_class;
+                        incrementCount(predictedClass);
+                        openLid(predictedClass);
+                    })
+                    .catch(error => console.error('Error:', error));
+                } else {
+                    console.log('No file selected.');
+                }
+            });
+
+            function incrementCount(className) {
+                var countElement = document.getElementById(className.toLowerCase() + '-count');
+                var count = parseInt(countElement.textContent);
+                countElement.textContent = count + 1;
+            }
+
+            function openLid(className) {
+                var lidElement = document.querySelector('#' + className.toLowerCase() + '-basket .lid');
+                lidElement.classList.add('open');
+                setTimeout(function() {
+                    lidElement.classList.remove('open');
+                }, 1500);
+            }
+        });
+    </script>
+</body>
+</html>
