@@ -29,5 +29,6 @@ Anyone interested in machine learning or waste management can use this project a
 
 ## Video Demonstration
 
-[Watch the demonstration video]([https://github.com/yourusername/repository-name/blob/main/wasteClassification%20-%20Video.mp4](https://github.com/islamghanem502/WasteClassification-model/blob/main/wasteClassification%20-%20Video.mp4))
+![Waste Classification Video](https://github.com/islamghanem502/WasteClassification-model/blob/main/wasteClassification-Video.gif)
+
 
