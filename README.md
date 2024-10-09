@@ -3,7 +3,7 @@
 ## Overview
 This project aims to build a web application that utilizes a deep learning model to classify types of waste (glass, metal, paper, plastic) based on uploaded images. The application is built using Flask, allowing users to upload waste images, which are then analyzed to provide the appropriate classification.
 
-## Objectives
+## Objectives 
 - **Waste Classification**: Identify the type of waste by analyzing uploaded images.
 
 ## How It Works
@@ -30,5 +30,8 @@ Anyone interested in machine learning or waste management can use this project a
 ## Video Demonstration
 
 ![Waste Classification Video](https://github.com/islamghanem502/WasteClassification-model/blob/main/wasteClassification-Video.gif)
+
+<h2>License</h2>
+    <p>This project is open-source and available under the <a href="LICENSE">MIT License</p>
 
 
