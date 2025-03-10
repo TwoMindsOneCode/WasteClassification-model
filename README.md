@@ -31,6 +31,9 @@ Anyone interested in machine learning or waste management can use this project a
 
 ![Waste Classification Video](https://github.com/islamghanem502/WasteClassification-model/blob/main/wasteClassification-Video.gif)
 
+## **Team**  
+<img src="logo.png" width="50%"/>
+
 <h2>License</h2>
     <p>This project is open-source and available under the <a href="LICENSE">MIT License</p>
 
